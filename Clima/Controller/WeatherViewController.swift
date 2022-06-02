@@ -48,10 +48,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     }
     // delegate method convention: first parameter is the identity that calls this method
     func didUpdateWeather(_ weatherManager: WeatherManager,  weather: WeatherModel) {
-        self.conditionImageView.image = UIImage(named: weather.conditionName)
-        self.temperatureLabel.text = weather.temperatureString
-        self.cityLabel.text = weather.cityName
-        print(weather)
+        DispatchQueue.main.async {
+            self.conditionImageView.image = UIImage(systemName: weather.conditionName)
+            self.temperatureLabel.text = weather.temperatureString
+            self.cityLabel.text = weather.cityName
+            print(weather)
+        }
     }
     
     func didFailWithError(error: Error) {
