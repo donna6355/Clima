@@ -9,12 +9,13 @@
 import Foundation
 
 struct WeatherManager {
-    let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?appid=ed85a014e40b48832e75863a0b5706e0&units=metric"
-    
+    let weatherUrl: String = "https://api.openweathermap.org/data/2.5/weather?appid=ed85a014e40b48832e75863a0b5706e0&units=metric"
+    var delegate: WeatherManagerDelegate?
     func fetchWeather (cityName: String) {
         let urlString = "\(weatherUrl)&q=\(cityName)"
         performRequest(urlString: urlString)
     }
+    
     func performRequest (urlString: String) {
         // 1. create URL
         if let url = URL(string: urlString) {
@@ -27,20 +28,18 @@ struct WeatherManager {
                     print(error!)
                     return
                 }
-                
                 if data != nil {
-                    self.parseJSON(weatherData: data!)
+                    if let weather = self.parseJSON(weatherData: data!) {
+                        self.delegate?.didUpdateWeather(weather: weather)
+                    }
                 }
-                
             }
-            
             // 4. start the task
             task.resume()
         }
-        
     }
     
-    func parseJSON( weatherData: Data) {
+    func parseJSON( weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
@@ -48,10 +47,15 @@ struct WeatherManager {
             let temp = decodedData.main.temp
             let id = decodedData.weather[0].id
             let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp)
-            print(weather)
+            return weather
         } catch {
             print(error)
+            return nil
         }
     }
     
+}
+
+protocol WeatherManagerDelegate {
+    func didUpdateWeather(weather: WeatherModel)
 }
