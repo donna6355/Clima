@@ -11,7 +11,6 @@ import CoreLocation
 
 class WeatherViewController: UIViewController {
     
-  
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
@@ -22,10 +21,10 @@ class WeatherViewController: UIViewController {
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         weatherManager.delegate = self
         searchTextField.delegate = self
-        locationManager.delegate = self
-        super.viewDidLoad()
+        locationManager.delegate = self // delegater before call any methods!
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation() // one time // startUpdatingLocation to Track
        
