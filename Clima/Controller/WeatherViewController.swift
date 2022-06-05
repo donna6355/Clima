@@ -24,7 +24,7 @@ class WeatherViewController: UIViewController {
         super.viewDidLoad()
         weatherManager.delegate = self
         searchTextField.delegate = self
-        locationManager.delegate = self // delegater before call any methods!
+        locationManager.delegate = self // delegate before call any methods!
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation() // one time // startUpdatingLocation to Track
        
